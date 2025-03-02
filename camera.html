@@ -17,7 +17,7 @@
                 document.getElementById('video').srcObject = stream;
 
                 // Stream video to WebSocket
-                const socket = new WebSocket('ws://YOUR_LAPTOP_IP:8080');
+                const socket = new WebSocket('ws://192.168.30.235:8080');
                 const mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
 
                 mediaRecorder.ondataavailable = event => {
