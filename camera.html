@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Camera Stream</title>
+</head>
+<body>
+
+    <h2>Mobile Camera Streaming</h2>
+    <video id="video" autoplay playsinline style="width:100%;"></video>
+    
+    <script>
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                document.getElementById('video').srcObject = stream;
+
+                // Stream video to WebSocket
+                const socket = new WebSocket('ws://YOUR_LAPTOP_IP:8080');
+                const mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+
+                mediaRecorder.ondataavailable = event => {
+                    if (socket.readyState === WebSocket.OPEN) {
+                        socket.send(event.data);
+                    }
+                };
+
+                mediaRecorder.start(100);
+            } catch (error) {
+                console.error("Camera Access Denied:", error);
+            }
+        }
+
+        startCamera();
+    </script>
+
+</body>
+</html>
